@@ -3,9 +3,12 @@ package org.iesalandalus.programacion.reservashotel.vista;
 
 import org.iesalandalus.programacion.utilidades.Entrada;
 
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.*;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.*;
+
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 public class Consola {
     private Consola() {
@@ -141,20 +144,22 @@ public class Consola {
     }
     public static Huesped getHuespedPorDni(){
         String dni;
+        System.out.println("introduzca el dni del huesped.");
         dni=Entrada.cadena();
         Huesped huespedDni= new Huesped("jose",dni,"jm.daenas@hotmail.com","656659765",LocalDate.of(1988,04,26));
         return huespedDni;
     }
     public static LocalDate leerFecha(String mensaje){
         System.out.println("introduzca la fecha de "+mensaje+" con el formato adecuado.");
-        LocalDate fecha= LocalDateTime.parse(Entrada.cadena(),Huesped.FORMATO_FECHA);
+        LocalDate fecha= LocalDate.parse(Entrada.cadena(),Huesped.FORMATO_FECHA);
         return fecha;
     }
-    public static LocalDate leerFecha(String mensaje){
-        System.out.println("introduzca la fecha de "+mensaje+" con el formato adecuado.");
-        LocalDate fecha=LocalDate.parse(Entrada.cadena(),Huesped.FORMATO_FECHA);
+    public static LocalDateTime leerFechaHora(String mensaje){
+        System.out.println("introduzca la fecha y la hora de "+mensaje+" con el formato adecuado.");
+        LocalDateTime fecha= LocalDateTime.parse(Entrada.cadena(),Reserva.FORMATO_FECHA_HORA_RESERVA);
         return fecha;
     }
+
     public static Habitacion leerHabitacion(){
         Habitacion habitacion = null;
         try {

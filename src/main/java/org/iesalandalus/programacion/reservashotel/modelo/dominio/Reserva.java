@@ -40,7 +40,7 @@ public class Reserva {
         setFechaInicioReserva(reserva.getFechaInicioReserva());
         setFechaFinReserva(reserva.getFechaFinReserva());
         setNumeroPersonas(reserva.getNumeroPersonas());
-        setPrecio(reserva.getPrecio());
+        setPrecio();
     }
     public Huesped getHuesped() {
         return huesped;
@@ -99,6 +99,11 @@ public class Reserva {
     }
 
     public void setCheckIn(LocalDateTime checkIn) {
+        if (checkIn == null)
+            throw new NullPointerException("ERROR: La fecha de check in no puee ser nula");
+        if (checkIn.isBefore(fechaInicioReserva.atStartOfDay()))
+            throw new IllegalArgumentException("ERROR L afecha dde check in no puede ser anterior a la fecha de inicio de reserva.");
+
         this.checkIn = checkIn;
     }
 
@@ -107,14 +112,23 @@ public class Reserva {
     }
 
     public void setCheckOut(LocalDateTime checkOut) {
+        if (checkIn == null)
+            throw new NullPointerException("ERROR: No ha realizado el check in.");
+        if (checkOut == null)
+            throw new NullPointerException("ERROR: La fecha de check out no puee ser nula");
+        if (checkOut.isBefore(checkIn))
+            throw new IllegalArgumentException("ERROR L afecha dde check in no puede ser anterior a la fecha de inicio de reserva.");
+        if (checkOut.isAfter(fechaFinReserva.atStartOfDay().plus(MAX_HORAS_POSTERIOR_CHECKOUT,ChronoUnit.HOURS)))
+            throw  new IllegalArgumentException("ERROR: La fecha de checout no puede ser posterior en 12 horas a la fecha de fin de reserva.");
         this.checkOut = checkOut;
+        setPrecio();
     }
 
     public double getPrecio() {
         return precio;
     }
 
-    private void setPrecio(double precio) {
+    private void setPrecio() {
         precio=(getRegimen().getIncrementoPrecio()*numeroPersonas)+habitacion.MIN_PRECIO_HABITACION;
         if(precio>habitacion.MAX_PRECIO_HABITACION) {
             precio = habitacion.MAX_PRECIO_HABITACION;

@@ -1,17 +1,20 @@
 package org.iesalandalus.programacion.reservashotel.modelo;
 
 import javax.naming.OperationNotSupportedException;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
-import java.org.iesalandalus.programacion.reservashotel.modelo.negocio.Habitaciones;
-import java.org.iesalandalus.programacion.reservashotel.modelo.negocio.Huespedes;
-import java.org.iesalandalus.programacion.reservashotel.modelo.negocio.Reservas;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.Habitaciones;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.Huespedes;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.Reservas;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Modelo {
-    private static final int CAPACIDAD=8;
     private Huespedes huespedes;
     private Reservas reservas;
     private Habitaciones habitaciones;
@@ -19,9 +22,9 @@ public class Modelo {
 
     }
      public void comenzar(){
-        huespedes=new Huespedes(CAPACIDAD);
-        reservas=new Reservas(CAPACIDAD);
-        habitaciones=new Habitaciones(CAPACIDAD);
+        huespedes=new Huespedes();
+        reservas=new Reservas();
+        habitaciones=new Habitaciones();
      }
      public void terminar(){
          System.out.println("El modelo ha terminado");
@@ -31,40 +34,37 @@ public class Modelo {
     }
 
     public Huesped buscar(Huesped huesped) {
-       return huespedes.buscar(huesped);
+        try {
+            return huespedes.buscar(huesped);
+        } catch (OperationNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void borrar(Huesped huesped) throws OperationNotSupportedException {
         huespedes.borrar(huesped);
     }
-    public Huesped[] getHuespedes(){
-    Huesped[] conjHuespedes=new Huesped[huespedes.getCapacidad()];
-    for (int i =0;i<getHuespedes().length;i++){
-        conjHuespedes[i]=(huespedes.get()[i]);
-        }
-        return conjHuespedes;
+    public List<Huesped> getHuespedes(){
+        return huespedes.get();
     }
     public void insertar(Habitacion habitacion) throws OperationNotSupportedException {
         habitaciones.insertar(habitacion);
     }
     public Habitacion buscar(Habitacion habitacion){
-        return habitaciones.buscar(habitacion);
+
+        try {
+            return habitaciones.buscar(habitacion);
+        } catch (OperationNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void borrar(Habitacion habitacion) throws OperationNotSupportedException {
         habitaciones.borrar(habitacion);
     }
-    public Habitacion[] getHabitaciones(){
-        Habitacion[] conjHabitaciones=new Habitacion[habitaciones.getCapacidad()];
-        for (int i =0;i<getHabitaciones().length;i++){
-            conjHabitaciones[i]=(habitaciones.get()[i]);
-        }
-        return conjHabitaciones;
+    public List<Habitacion> getHabitaciones(){
+        return habitaciones.get();
     }
-    public Habitacion[] getHabitaciones(TipoHabitacion tipoHabitacion){
-        Habitacion[] conjHabitaciones=new Habitacion[habitaciones.getCapacidad()];
-        for (int i =0;i< getHabitaciones().length;i++){
-            conjHabitaciones[i]=(habitaciones.get(tipoHabitacion)[i]);
-        }
-        return conjHabitaciones;
+    public List<Habitacion> getHabitaciones(TipoHabitacion tipoHabitacion){
+        return habitaciones.get(tipoHabitacion);
     }
     public void insertar(Reserva reserva) throws OperationNotSupportedException{
         reservas.insertar(reserva);
@@ -73,31 +73,35 @@ public class Modelo {
         reservas.borrar(reserva);
     }
     public Reserva buscar(Reserva reserva){
-        return reservas.buscar(reserva);
+        try {
+            return reservas.buscar(reserva);
+        } catch (OperationNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
-    public Reserva[] getReservas(){
+    public List<Reserva> getReservas(){
 
         return reservas.get();
     }
-    public Reserva[] getReservas(Huesped huesped){
+    public List<Reserva> getReservas(Huesped huesped){
 
         return reservas.getReservas(huesped);
     }
-    public Reserva[] getReservas(TipoHabitacion tipoHabitacion){
+    public List<Reserva> getReservas(TipoHabitacion tipoHabitacion){
 
         return reservas.getReservas(tipoHabitacion);
     }
-    public Reserva[] getReservasFuturas(Habitacion habitacion){
-        Reserva[] conjReservasFuturas =reservas.getReservasFuturas(habitacion);
+    public List<Reserva> getReservasFuturas(Habitacion habitacion){
+        List<Reserva> conjReservasFuturas =reservas.getReservasFuturas(habitacion);
         return conjReservasFuturas;
     }
-    public void realizarCheckin(Reserva reserva LocalDateTime fecha){
+    public void realizarCheckin(Reserva reserva,LocalDateTime fecha) throws OperationNotSupportedException {
 
-        fecha=reservas.getHuesped(getReservas(reserva.setCheckIn(LocalDateTime.now());
+       reservas.realizarCheckin(reserva,fecha);
 
     }
-    public void realizarCheckout(Reserva reserva LocalDateTime fecha){
-        LocalDateTime;
+    public void realizarCheckout(Reserva reserva,LocalDateTime fecha ) throws OperationNotSupportedException {
+        reservas.realizarCheckout(reserva,fecha);
     }
 }
 

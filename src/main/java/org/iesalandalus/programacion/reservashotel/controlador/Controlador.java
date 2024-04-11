@@ -1,13 +1,14 @@
 package org.iesalandalus.programacion.reservashotel.controlador;
 
 import javax.naming.OperationNotSupportedException;
-import java.org.iesalandalus.programacion.reservashotel.modelo.Modelo;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
-import java.org.iesalandalus.programacion.reservashotel.vista.Vista;
+import org.iesalandalus.programacion.reservashotel.modelo.Modelo;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
+import org.iesalandalus.programacion.reservashotel.vista.Vista;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Controlador {
     private Modelo modelo;
@@ -21,7 +22,7 @@ public class Controlador {
         this.vista=vista;
         vista.setControlador(this);
     }
-    public  void comenzar(){
+    public  void comenzar()  {
         modelo.comenzar();
         vista.comenzar();
     }
@@ -42,7 +43,7 @@ public class Controlador {
     public void borrar(Huesped huesped)throws OperationNotSupportedException{
         modelo.borrar(huesped);
     }
-    public Huesped[] getHuespedes(){
+    public List<Huesped> getHuespedes(){
         return modelo.getHuespedes();
     }
     public void insertar(Habitacion habitacion)throws OperationNotSupportedException{
@@ -55,10 +56,10 @@ public class Controlador {
     public void borrar(Habitacion habitacion)throws OperationNotSupportedException{
         modelo.borrar(habitacion);
     }
-    public Habitacion[] getHabitaciones(){
+    public List<Habitacion> getHabitaciones(){
         return modelo.getHabitaciones();
     }
-    public Habitacion[] getHabitaciones(TipoHabitacion tipoHabitacion){
+    public List<Habitacion> getHabitaciones(TipoHabitacion tipoHabitacion){
         return modelo.getHabitaciones(tipoHabitacion);
     }
     public void insertar(Reserva reserva)throws OperationNotSupportedException{
@@ -71,22 +72,25 @@ public class Controlador {
     public void borrar(Reserva reserva)throws OperationNotSupportedException{
         modelo.borrar(reserva);
     }
-    public Reserva[] getReservas(){
+    public List<Reserva> getReservas(){
         return modelo.getReservas();
     }
-    public Reserva[] getReservas(Huesped huesped){
+    public List<Reserva> getReservas(Huesped huesped){
         return modelo.getReservas(huesped);
     }
-    public Reserva[] getReservas(TipoHabitacion tipoHabitacion){
+    public List<Reserva> getReservas(TipoHabitacion tipoHabitacion){
         return modelo.getReservas(tipoHabitacion);
     }
-    public Reserva[] getReservasFuturas(Habitacion habitacion){
+    public List<Reserva> getReservasFuturas(Habitacion habitacion){
+
         return modelo.getReservasFuturas(habitacion);
     }
-    public void realizarCheckin(Reserva reserva LocalDateTime fecha){
+    public void realizarCheckin(Reserva reserva,LocalDateTime fecha) throws OperationNotSupportedException {
+
         modelo.realizarCheckin(reserva , fecha);
     }
-    public void realizarCheckout(Reserva reserva LocalDateTime fecha){
+    public void realizarCheckout(Reserva reserva,LocalDateTime fecha) throws OperationNotSupportedException {
+
         modelo.realizarCheckin(reserva , fecha);
     }
 }

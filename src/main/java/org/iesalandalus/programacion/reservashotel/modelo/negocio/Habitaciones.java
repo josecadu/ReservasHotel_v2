@@ -3,119 +3,80 @@ package org.iesalandalus.programacion.reservashotel.modelo.negocio;
 
 
 import javax.naming.OperationNotSupportedException;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
-import java.org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Habitaciones {
-    private int capacidad;
-    private int tamano;
-    private Habitacion[] coleccionHabitaciones;
-    public Habitaciones(int capacidad){
-        this.capacidad=capacidad;
-        this.coleccionHabitaciones =new Habitacion[capacidad];
-        tamano=0;
+
+    private List<Habitacion> coleccionHabitaciones;
+    public Habitaciones(){
+        coleccionHabitaciones =new ArrayList<>();
     }
 
-    public int getTamano() {
-        return tamano;
-    }
+    public List<Habitacion> get(){
 
-    public int getCapacidad() {
-        return capacidad;
-    }
-    public Habitacion[] get(){
         return copiaProfundaHabitaciones();
     }
-    private Habitacion[] copiaProfundaHabitaciones(){
-        Habitacion[] copiaProfunda=new Habitacion[capacidad];
-        for (int i = 0; i< coleccionHabitaciones.length; i++){
-            copiaProfunda[i]=(coleccionHabitaciones[i]);
-        }
-        return copiaProfunda;
+
+
+    private List<Habitacion> copiaProfundaHabitaciones(){
+        List<Habitacion> copiaColeccion= new ArrayList<>();
+        copiaColeccion.addAll(coleccionHabitaciones);
+        return copiaColeccion;
     }
-    public Habitacion[] get(TipoHabitacion tipoHabitacion){
-        Habitacion[] copiaProfundaTipo=new Habitacion[capacidad];
-        for (int i = 0; i< coleccionHabitaciones.length; i++){
-            if (coleccionHabitaciones[i].getTipoHabitacion().equals(tipoHabitacion)){
-                copiaProfundaTipo[i]=(coleccionHabitaciones[i]);
+    public List<Habitacion> get(TipoHabitacion tipoHabitacion){
+        List<Habitacion> coleccionTipo = new ArrayList<>();
+        for (Habitacion tipoHab : coleccionHabitaciones)
+            if (tipoHab.getTipoHabitacion().equals(tipoHabitacion)) {
+               coleccionTipo.add( (Habitacion) coleccionHabitaciones);
             }
-        }
-        return copiaProfundaTipo;
+        return coleccionTipo;
+       
     }
     public void insertar(Habitacion habitacion) throws OperationNotSupportedException {
-        if(habitacion==null)
-            throw  new NullPointerException("ERROR: No se puede insertar una habitación nula.");
-        if(capacidadSuperada(buscarIndice(habitacion)))
-            throw new OperationNotSupportedException("ERROR: No se aceptan mas habitaciónes.");
-        if(!tamanoSuperado(buscarIndice(habitacion)))
-            throw  new OperationNotSupportedException("ERROR: Ya hay una habitación con ese identificador.");
-        coleccionHabitaciones[buscarIndice(habitacion)]=new Habitacion(habitacion);
-        tamano++;
+
+        if(coleccionHabitaciones.contains(habitacion)){
+        throw new OperationNotSupportedException("ERROR: Ya hay una habitación con ese identificador.");
+        }
+        if(habitacion==null) {
+            throw new NullPointerException("ERROR: No se puede insertar una habitación nula.");
+        }
+        Habitacion nuevaHabitacion =new Habitacion(habitacion);
+        coleccionHabitaciones.add(nuevaHabitacion);
         System.out.println("La habitación se añadio correctamente");
     }
-    private int buscarIndice(Habitacion habitacion){
-        int indice=-1;
-        boolean find=false;
-        for (int i = 0; i< coleccionHabitaciones.length && !find; i++){
-            if(coleccionHabitaciones[i] != null && coleccionHabitaciones[i].equals(habitacion)){
-                indice = i;
-                find=true;
-            }
-            else {
-                indice=getTamano()+1;
-            }
-        }
-        return indice;
-    }
-    private Boolean tamanoSuperado(int indice){
-        if(indice>=tamano){
-            return true;
-        }
-        else{
-            return false;
-        }
 
-    }
-    private Boolean capacidadSuperada(int indice){
-        if(indice>=capacidad){
-            return true;
+
+
+    public Habitacion buscar(Habitacion habitacion) throws OperationNotSupportedException {
+        if (habitacion == null)
+            throw new NullPointerException("ERROR: No se puede buscar una habitacion nula.");
+        if (!coleccionHabitaciones.contains(habitacion)){
+            throw new OperationNotSupportedException("ERROR: No existe ninguna habitación asi.");
         }
-        else {
-            return false;
-        }
-    }
-    public Habitacion buscar(Habitacion habitacion){
-        if(habitacion==null){
-            throw  new NullPointerException("ERROR: No se puede buscar una habitación nula.");
-        }
-        Habitacion habitacion1= null;
-        boolean find=false;
-        for(int i = 0; i< coleccionHabitaciones.length && !find ; i++){
-            if(coleccionHabitaciones[i] != null && coleccionHabitaciones[i].equals(habitacion)){
-                habitacion1= coleccionHabitaciones[i];
-                find= true;
-            }
-        }
-        return habitacion1;
+        int indice = coleccionHabitaciones.indexOf(habitacion);
+        if (indice != -1)
+            return coleccionHabitaciones.get(indice);
+        else
+            return null;
     }
     public void borrar(Habitacion habitacion) throws OperationNotSupportedException {
         if(habitacion==null){
             throw new NullPointerException("ERROR: No se puede borrar una habitacion nula.");
         }
-        int indice =buscarIndice(habitacion);
-        if (indice==-1){
+        if (!coleccionHabitaciones.contains(habitacion)){
             throw new OperationNotSupportedException("ERROR: No existe ningun habitación asi.");
         }
-        else {
-            desplazarPosicionHaciaIzquierda(indice);
-            tamano--;
+            coleccionHabitaciones.remove(habitacion);
             System.out.println("La habitación ha sido borrada.");
         }
 
+
+    public int getTamano() {
+        return coleccionHabitaciones.size();
     }
-    private void desplazarPosicionHaciaIzquierda(int indice){
-        for(int i = indice; i< coleccionHabitaciones.length-1 && coleccionHabitaciones[i]!=null; i++){
-            coleccionHabitaciones[i]= coleccionHabitaciones[i+1];
-        }
-    }
+
 }
